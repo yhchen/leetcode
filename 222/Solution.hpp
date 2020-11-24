@@ -16,7 +16,7 @@
 
 int calcDeepRight(struct TreeNode* root) {
     int deep = 0;
-    while (root) {
+    while (root->right) {
         ++deep;
         root = root->right;
     }
@@ -25,39 +25,45 @@ int calcDeepRight(struct TreeNode* root) {
 
 int calcDeepLeft(struct TreeNode* root) {
     int deep = 0;
-    while (root) {
+    while (root->left) {
         ++deep;
         root = root->left;
     }
     return deep;
 }
 
-int calcLastLayerCount(struct TreeNode* root, int leftDeep, int rightDeep) {
+int calcLastLayerCount(struct TreeNode* root, int maxDeep) {
     int leftNode = 0;
-    int rightNode = 1 << leftDeep - 1;
-    int mid = (leftNode + rightNode) / 2;
-    int mod = 1 << rightDeep;
-    while (leftNode < rightNode) {
+    int rightNode = (1 << maxDeep) - 1;
+    int mid = (leftNode + rightNode + 1) / 2;
+    int mod = 1 << (maxDeep - 1);
+    while (rightNode - leftNode > 1) {
         struct TreeNode* node = root;
         int tmp = mod;
         while (tmp > 0) {
             node = mid & tmp ? node->right: node->left;
             tmp = (tmp >> 1);
         }
-        if (node) leftNode = mid;
-        else rightNode = mid;
-        mid = (leftNode + rightNode) / 2;
+        if (node) {
+            leftNode = mid;
+            mid = (leftNode + rightNode + 1) / 2;
+        }
+        else {
+            rightNode = mid;
+            mid = (leftNode + rightNode - 1) / 2;
+        }
     }
-    return (2 << leftDeep) - rightNode;
+    return (1 << maxDeep) + leftNode;
 }
 
 int countNodes(struct TreeNode* root) {
+    if (root == 0) return 0;
     int leftDeep = calcDeepLeft(root);
     int rightDeep = calcDeepRight(root);
     if (leftDeep == rightDeep) {
         return (2 << leftDeep) - 1;
     }
-    return calcLastLayerCount(root, leftDeep, rightDeep);
+    return calcLastLayerCount(root, leftDeep);
 }
 
 #endif //INC_222_SOLUTION_HPP
