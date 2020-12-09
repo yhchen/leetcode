@@ -5,15 +5,27 @@
 #ifndef INC_62_SOLUTION_HPP
 #define INC_62_SOLUTION_HPP
 
-int scout(int x, int y, int m, int n) {
-    if (x >= m || y >= n) {
-        return 1;
-    }
-    return scout(x + 1, y, m, n) + scout(x, y + 1, m, n);
-}
+#include <vector>
 
-int uniquePaths(int m, int n) {
-    return scout(1, 1, m, n);
-}
+class Solution {
+public:
+    int uniquePaths(int m, int n) {
+        std::vector<std::vector<int> > matrix(m, std::vector<int>(n));
+
+        for (int i = 0; i < m; ++i) {
+            matrix[i][0] = 1;
+        }
+        for (int j = 0; j < n; ++j) {
+            matrix[0][j] = 1;
+        }
+        for (int i = 1; i < m; ++i) {
+            for (int j = 1; j < n; ++j) {
+                matrix[i][j] = matrix[i - 1][j] + matrix[i][j - 1];
+            }
+        }
+
+        return matrix[m - 1][n - 1];
+    }
+};
 
 #endif //INC_62_SOLUTION_HPP
