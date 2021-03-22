@@ -4,6 +4,8 @@
 #include <string>
 #include <vector>
 
+// url: https://leetcode-cn.com/problems/verify-preorder-serialization-of-a-binary-tree/
+
 class Solution {
 public:
     bool isValidSerialization(std::string preorder) {
